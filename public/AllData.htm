@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Download Youtobe to Mp3</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/bootstrap.min.css" rel="stylesheet" />
+    <link rel="icon" href="/favicon.ico" />
+    <style>
+      .loading.hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row" style="margin-top: 50px">
+        <h5>YouTube to MP3 Converter</h5>
+        <form>
+          <div class="mb-3">
+            <label for="youtube-to-mp3" class="form-label">Link Youtube</label>
+            <input
+              value=""
+              id="youtube-to-mp3"
+              type="text"
+              name="d-link"
+              class="form-control"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="button" data-clear="clear" class="btn btn-primary">
+            Clear
+          </button>
+        </form>
+      </div>
+    </div>
+    <div
+      class="loading hidden"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #333;
+        opacity: 0.2;
+      "
+    >
+      <div
+        style="
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        "
+      >
+        <div class="spinner-border text-warning" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      />
+    </div>
+    <script src="/bootstrap.bundle.min.js"></script>
+    <script src="/jquery.min.js"></script>
+    <script>
+      function downloadFile(filePath) {
+        let link = document.createElement("a");
+        link.href = filePath;
+        link.style = "visibility:hidden";
+        link.download = "AllData";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+      $('button[data-clear="clear"]').click(function (e) {
+        $("form").find("input[name='d-link']").val("");
+        $("form").find("input[name='d-link']").focus();
+      });
+      $("form").submit(function (e) {
+        e.preventDefault();
+        $(".loading").removeClass("hidden");
+        setTimeout(() => {
+          $(".loading").addClass("hidden");
+        }, 2000);
+        let dLink = $(this).find("input[name='d-link']").val();
+        if (
+          dLink &&
+          new RegExp(
+            "^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$"
+          ).test(dLink)
+        ) {
+          var settings = {
+            url: "/yt-to-mp3",
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ link: dLink }),
+          };
+
+          $.ajax(settings).done(function (response) {
+            downloadFile("/download?link=" + response.dlink);
+          });
+        } else {
+          alert("Link không đúng định dạng");
+        }
+      });
+    </script>
+  </body>
+</html>
