@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const FormData = require("form-data");
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 const got = require("got");
 
 const fetch = require("node-fetch");
